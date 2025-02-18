@@ -21,15 +21,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
+
       - name: Install dependencies
         run: npm install
+
       - name: Build VitePress site
         run: npm run build
+
+      # 关键修复点 1：在构建后直接上传 Pages 专用产物
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v2 # 使用专门为 Pages 设计的上传 Action
+        with:
+          path: docs/.vitepress/dist # 确保路径正确
 
   deploy:
     needs: build
@@ -37,13 +46,12 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Setup Pages
         uses: actions/configure-pages@v3
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          path: './docs/.vitepress/dist' # VitePress 构建输出目录
+
+      # 关键修复点 2：直接部署，无需手动上传普通产物
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
