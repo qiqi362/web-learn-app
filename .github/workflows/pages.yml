@@ -46,7 +46,7 @@ jobs:
 
       # 关键修复点 1：在构建后直接上传 Pages 专用产物
       - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v4 # 使用专门为 Pages 设计的上传 Action
+        uses: actions/upload-artifact@v4 # 使用专门为 Pages 设计的上传 Action
         with:
           path: docs\.vitepress\dist # 确保路径正确
 
