@@ -19,6 +19,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            docs/.vitepress/cache
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -38,7 +48,7 @@ jobs:
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v2 # 使用专门为 Pages 设计的上传 Action
         with:
-          path: docs/.vitepress/dist # 确保路径正确
+          path: docs\.vitepress\dist # 确保路径正确
 
   deploy:
     needs: build
